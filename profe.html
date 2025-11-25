@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mensaje y Revelación</title>
+    <style>
+        /* CSS Integrado - TEMA CLARO */
+        body {
+            background-color: #ffffff; /* Fondo CLARO (Blanco) */
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: flex-start;
+            min-height: 100vh;
+            margin: 0;
+            padding: 40px;
+            font-family: 'Courier New', Courier, monospace;
+            color: #333333; /* Texto CLARO (Gris oscuro/negro) */
+            box-sizing: border-box;
+            overflow: hidden; 
+        }
+
+        /* Contenedor del mensaje de tipado */
+        #mensaje-wrapper {
+            width: 100%;
+            max-width: 90vw; 
+            font-size: 2.5em; /* Fuente grande */
+            line-height: 1.3;
+        }
+
+        /* El texto en sí */
+        #mensaje {
+            white-space: pre-wrap;
+            overflow: hidden;
+            display: inline;
+        }
+        
+        /* Estilo para el cursor parpadeante que se moverá */
+        #mensaje-wrapper.typing::after {
+            content: '';
+            display: inline-block;
+            width: 0;
+            height: 1.2em; 
+            vertical-align: top; 
+            margin-left: 2px;
+            border-right: .15em solid #333333; /* Cursor negro */
+            animation: 
+                blinking-cursor .75s step-end infinite;
+        }
+
+        /* Animación del cursor */
+        @keyframes blinking-cursor {
+            from, to { border-color: transparent }
+            50% { border-color: #333333; }
+        }
+
+        .firma {
+            text-align: right;
+            margin-top: 20px;
+            font-style: italic;
+            width: 100%;
+            position: absolute;
+            bottom: 40px;
+            right: 40px;
+            font-size: 0.5em; 
+            color: #666; 
+        }
+
+        .creditos {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            font-size: 1.3em;
+            color: #000;
+        }
+
+        .resaltado {
+            font-weight: bold;
+            color: #c0392b; 
+            text-decoration: underline;
+        }
+        
+        /* Contenedor de la Imagen a Pantalla Completa */
+        #image-container {
+            display: none; /* Inicialmente oculto */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #ffffff; /* Fondo blanco */
+            z-index: 1000; /* Asegura que esté por encima de todo */
+            justify-content: center;
+            align-items: center;
+        }
+
+        #image-container img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain; /* Asegura que la imagen se ajuste sin cortar */
+        }
+    </style>
+</head>
+<body>
+
+    <div id="mensaje-wrapper" class="typing">
+        <span id="mensaje"></span>
+    </div>
+    
+    <div class="firma">
+        Atentamente,<br>
+        El Bachiller de Ciencias Básicas, Generación 2025
+    </div>
+
+    <div class="creditos">
+        Programado por Joel
+    </div>
+
+    <div id="image-container">
+        <img src="tobi.png" alt="Maestro con traje de graduado">
+    </div>
+
+    <script>
+        // JS Integrado
+        const textoCompleto = `
+Estimado Maestro,
+
+Con gran respeto y profunda gratitud, toda la generación del Bachiller de Ciencias Básicas desea extenderle nuestro más sincero agradecimiento por su invaluable dedicación.
+
+Sus enseñanzas no solo nutrieron nuestro conocimiento, sino que también nos inspiraron a alcanzar la excelencia. Usted ha sido un pilar fundamental en nuestro desarrollo y un ejemplo a seguir.
+
+Al mirar hacia nuestro futuro, recordamos con cariño y admiración cada una de sus clases y consejos. Es por ello que, en este momento tan significativo de nuestras vidas, nos haría inmensamente felices poder contar con usted de una manera muy especial.
+
+Nos honraría enormemente que aceptara acompañarnos como figura central en nuestra ceremonia de graduación, siendo nuestro **Padrino de Graduación**. Su presencia daría un toque de distinción y significado a este evento.
+
+Esperamos ansiosamente su respuesta.
+
+Con el mayor de los afectos.
+`;
+        
+        const elementoMensaje = document.getElementById('mensaje');
+        const wrapper = document.getElementById('mensaje-wrapper');
+        const firma = document.querySelector('.firma');
+        const creditos = document.querySelector('.creditos');
+        const imageContainer = document.getElementById('image-container');
+        const ventanaAltura = window.innerHeight - 80; 
+        let i = 0; 
+        const velocidad = 70; // Velocidad de tecleado a 70ms (lento)
+        let typingInterval;
+
+        function limpiarPantallaYSeguir() {
+            elementoMensaje.innerHTML = ''; 
+            wrapper.classList.add('typing'); 
+            typingInterval = setTimeout(escribirTexto, velocidad); 
+        }
+
+        function escribirTexto() {
+            if (i < textoCompleto.length) {
+                let caracter = textoCompleto.charAt(i);
+                
+                elementoMensaje.innerHTML += caracter; 
+                
+                // LÓGICA DE DETECCIÓN Y LIMPIEZA
+                // Si el texto excede la altura de la ventana, limpia la pantalla y continúa
+                if (wrapper.offsetHeight > ventanaAltura) {
+                    clearTimeout(typingInterval); 
+                    limpiarPantallaYSeguir();
+                    return;                     
+                }
+
+                // Lógica de reemplazo de plantilla y resaltado
+                if (elementoMensaje.innerHTML.includes('**Padrino de Graduación**')) {
+                    elementoMensaje.innerHTML = elementoMensaje.innerHTML.replace(
+                        '**Padrino de Graduación**', 
+                        '<span class="resaltado">Padrino de Graduación</span>'
+                    );
+                }
+                
+                if (document.querySelector('.firma').innerHTML.includes('[Año de Graduación]')) {
+                    document.querySelector('.firma').innerHTML = document.querySelector('.firma').innerHTML.replace('[Año de Graduación]', new Date().getFullYear() + 1);
+                }
+
+                i++;
+                typingInterval = setTimeout(escribirTexto, velocidad);
+            } else {
+                // *** ACCIÓN FINAL: MOSTRAR IMAGEN ***
+                wrapper.classList.remove('typing');
+                wrapper.style.display = 'none';
+                firma.style.display = 'none';
+                creditos.style.display = 'none';
+                imageContainer.style.display = 'flex'; // Muestra la imagen en pantalla completa
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', escribirTexto);
+    </script>
+
+</body>
+</html>
