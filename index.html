@@ -110,7 +110,7 @@
     
     <div class="firma">
         Atentamente,<br>
-        El Bachiller de Ciencias Básicas, Generación 2025
+        El Bachiller de Ciencias Básicas, Generación <span id="grad-year">2025</span>
     </div>
 
     <div class="creditos">
@@ -144,6 +144,7 @@ Con el mayor de los afectos.
         const firma = document.querySelector('.firma');
         const creditos = document.querySelector('.creditos');
         const imageContainer = document.getElementById('image-container');
+        const gradYearElement = document.getElementById('grad-year');
         const ventanaAltura = window.innerHeight - 80; 
         let i = 0; 
         const velocidad = 70; // Velocidad de tecleado a 70ms (lento)
@@ -162,7 +163,6 @@ Con el mayor de los afectos.
                 elementoMensaje.innerHTML += caracter; 
                 
                 // LÓGICA DE DETECCIÓN Y LIMPIEZA
-                // Si el texto excede la altura de la ventana, limpia la pantalla y continúa
                 if (wrapper.offsetHeight > ventanaAltura) {
                     clearTimeout(typingInterval); 
                     limpiarPantallaYSeguir();
@@ -177,10 +177,6 @@ Con el mayor de los afectos.
                     );
                 }
                 
-                if (document.querySelector('.firma').innerHTML.includes('[Año de Graduación]')) {
-                    document.querySelector('.firma').innerHTML = document.querySelector('.firma').innerHTML.replace('[Año de Graduación]', new Date().getFullYear() + 1);
-                }
-
                 i++;
                 typingInterval = setTimeout(escribirTexto, velocidad);
             } else {
@@ -193,7 +189,13 @@ Con el mayor de los afectos.
             }
         }
 
-        document.addEventListener('DOMContentLoaded', escribirTexto);
+        document.addEventListener('DOMContentLoaded', () => {
+            // Ajusta el año de graduación si fuera necesario (aunque en el HTML ya está fijo a 2025)
+            // gradYearElement.textContent = new Date().getFullYear() + 1; 
+
+            // *** INICIO RETRASADO DE 5 SEGUNDOS (5000 ms) ***
+            setTimeout(escribirTexto, 5000);
+        });
     </script>
 
 </body>
